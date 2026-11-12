@@ -1,46 +1,102 @@
 import React from 'react';
-import { Film, ShieldCheck, Sparkles } from 'lucide-react';
+
+export type NavSection = 'boxoffice' | 'stats' | 'bookmarks';
 
 interface HeaderProps {
-  currentDateText: string;
+  activeSection: NavSection;
+  onSelectSection: (section: NavSection) => void;
+  bookmarkCount: number;
+  onJumpToLatest: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ currentDateText }) => {
+export const Header: React.FC<HeaderProps> = ({
+  activeSection,
+  onSelectSection,
+  bookmarkCount,
+  onJumpToLatest,
+}) => {
   return (
-    <header className="border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
-            <Film className="w-5 h-5 text-zinc-950 stroke-[2.5]" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold tracking-tight text-white flex items-center gap-1.5">
-                일일 박스오피스
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                  KOBIS
-                </span>
-              </h1>
-            </div>
-            <p className="text-xs text-zinc-400 hidden sm:block">
-              영화진흥위원회 영화관입장권통합전산망 공식 OpenAPI 연동
-            </p>
-          </div>
-        </div>
+    <header className="sticky top-0 z-30 border-b border-zinc-800/90 bg-zinc-950/90 backdrop-blur-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
+        {/* Zone 1: Single-element Brand Wordmark */}
+        <button
+          onClick={() => onSelectSection('boxoffice')}
+          className="text-lg sm:text-xl font-extrabold tracking-tight text-white hover:text-amber-400 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+        >
+          CINE KOBIS
+        </button>
 
-        {/* Right Info / Security Badge */}
-        <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-zinc-300">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>서버 환경변수 API 키 보안 적용</span>
-          </div>
+        {/* Zone 2: Concise Single-Line Navigation Links */}
+        <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
+          <button
+            onClick={() => onSelectSection('boxoffice')}
+            className={`py-1 border-b-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+              activeSection === 'boxoffice'
+                ? 'border-amber-400 text-white'
+                : 'border-transparent text-zinc-400 hover:text-white'
+            }`}
+          >
+            박스오피스
+          </button>
+          <button
+            onClick={() => onSelectSection('stats')}
+            className={`py-1 border-b-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+              activeSection === 'stats'
+                ? 'border-amber-400 text-white'
+                : 'border-transparent text-zinc-400 hover:text-white'
+            }`}
+          >
+            점유율 통계
+          </button>
+          <button
+            onClick={() => onSelectSection('bookmarks')}
+            className={`py-1 border-b-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+              activeSection === 'bookmarks'
+                ? 'border-amber-400 text-white'
+                : 'border-transparent text-zinc-400 hover:text-white'
+            }`}
+          >
+            내 찜 목록 ({bookmarkCount})
+          </button>
+        </nav>
 
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-xs font-medium text-amber-300">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span className="truncate max-w-[140px] sm:max-w-none">{currentDateText}</span>
-          </div>
+        {/* Zone 3: 1 Primary Action */}
+        <div className="flex items-center shrink-0">
+          <button
+            onClick={onJumpToLatest}
+            className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 text-xs font-bold transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+          >
+            최신 박스오피스
+          </button>
         </div>
+      </div>
+
+      {/* Mobile Navigation Bar */}
+      <div className="md:hidden border-t border-zinc-800/70 px-4 py-2 flex items-center justify-around text-xs font-medium bg-zinc-950">
+        <button
+          onClick={() => onSelectSection('boxoffice')}
+          className={`px-3 py-1.5 rounded-md whitespace-nowrap shrink-0 ${
+            activeSection === 'boxoffice' ? 'text-amber-400 font-bold' : 'text-zinc-400'
+          }`}
+        >
+          박스오피스
+        </button>
+        <button
+          onClick={() => onSelectSection('stats')}
+          className={`px-3 py-1.5 rounded-md whitespace-nowrap shrink-0 ${
+            activeSection === 'stats' ? 'text-amber-400 font-bold' : 'text-zinc-400'
+          }`}
+        >
+          점유율 통계
+        </button>
+        <button
+          onClick={() => onSelectSection('bookmarks')}
+          className={`px-3 py-1.5 rounded-md whitespace-nowrap shrink-0 ${
+            activeSection === 'bookmarks' ? 'text-amber-400 font-bold' : 'text-zinc-400'
+          }`}
+        >
+          내 찜 목록 ({bookmarkCount})
+        </button>
       </div>
     </header>
   );
